@@ -1,6 +1,6 @@
 
 /*
- * *** PLACE YOUR NAME / SECTION HERE ***
+ * *** FRANCISCO GARZON / COMP 400C ***
  *
  * Homework # 2 (Programming Assignment). This Java class defines a few basic
  * manipulation operations of a binary trees.
@@ -58,7 +58,7 @@ public class BinaryTree {
         root = node;
     }
 
-    /* 
+    /*
      * Class Node
      *
      * The node object definition for each node of the bin ary tree.
@@ -178,7 +178,7 @@ public class BinaryTree {
      * which does the actual work. The public wrapper method simply passes the root
      * of the tree to helper method.
      */
-    
+
     public String preOrder() {
         return preOrderHelper(root);
     }
@@ -222,8 +222,19 @@ public class BinaryTree {
 
     private void replaceValueHelper(Node node, int oldVal, int newVal) {
 
-        // ADD YOUR CODE HERE -- USE DEPTH FIRST SEARCH OF
-        // BINARY TREE (WHICH IS BASED ON RECURSION)
+        // initialize in case is null
+        if (node == null){
+            return;
+
+        }
+        // if the current node's data matches oldVal we should replace it with newVal
+        if (node.data == oldVal){
+            node.data = newVal;
+        }
+
+        // traversing from left to right subtrees
+        replaceValueHelper(node.left, oldVal, newVal);
+        replaceValueHelper(node.right, oldVal, newVal);
 
     }
 
@@ -244,10 +255,19 @@ public class BinaryTree {
 
     private int findMinHelper(Node node) {
 
-        // ADD YOUR CODE HERE -- USE DEPTH FIRST SEARCH OF
-        // BINARY TREE (WHICH IS BASED ON RECURSION)
 
-        return Integer.MAX_VALUE;
+        // start in case node is null and we simply return the max value
+        if (node == null){
+            return Integer.MAX_VALUE;
+
+        }
+
+        // recursively search the min in the left and right subtrees
+        int leftMin = findMinHelper(node.left);
+        int rightMin = findMinHelper(node.right);
+
+        // return smallest value in the node
+        return Math.min(node.data, Math.min(leftMin, rightMin));
     }
 
 
@@ -266,13 +286,25 @@ public class BinaryTree {
 
     private int nodesGTHelper(Node node, int val) {
 
-        // ADD YOUR CODE HERE -- USE DEPTH FIRST SEARCH OF
-        // BINARY TREE (WHICH IS BASED ON RECURSION)
+        // if the tree is empty, return 0
+        if (node == null){
+            return 0;
+        }
 
-        // return -1; // RECALL, IF TREE IS EMPTY, RETURN -1
+        int currentCount = 0;
+        // if the current node is greater than val, keep counting
+        if (node.data > val){
+            currentCount = 1;
 
+        }
+        // count nodes greater than val in the left subtree
+        currentCount += nodesGTHelper(node.left,val);
 
-        return -1;
+        // keep counting nodes greater than val in the right subtree
+        currentCount += nodesGTHelper(node.right,val);
+
+        // total number of nodes greater than val
+        return currentCount;
     }
 
 
@@ -304,13 +336,23 @@ public class BinaryTree {
 
     private int[] averageHelper(Node n) {
 
-        // ADD YOUR CODE HERE -- USE DEPTH FIRST SEARCH OF
-        // BINARY TREE (WHICH IS BASED ON RECURSION)
+        // first if the tree is empty, return 0 for both sum and count
+        if (n == null){
+            return new int[]{0,0};
+        }
 
-        // RECALL, IF THE TREE IS EMPTY, RETURN 0 FOR BOTH THE SUM AND
-        // COUNT LOCATIONS IN THE RETURNED ARRAY AS SHOWN BELOW, ELSE
-        // THE 'SUM' IS RETURNED IN INDEX LOCATION 0, AND COUNT IS LOCATION 1
+        // keep the count of the avrg of the left side subtrees
+        int[] leftSumAndCount = averageHelper(n.left);
+        // keep the count of the average of the right side subtrees
+        int[] rightSumAndCount = averageHelper(n.right);
 
-        return new int[]{0, 0};
+        // to calculate the total sum and count of nodes
+        // ELSE THE 'SUM' IS RETURNED IN INDEX LOCATION 0, AND COUNT IS LOCATION 1
+        int totalSum = n.data + leftSumAndCount[0] + rightSumAndCount[0];
+        int totalCount = 1 + leftSumAndCount[1] + rightSumAndCount[1];
+
+
+        return new int[]{totalSum, totalCount};
     }
 }
+
